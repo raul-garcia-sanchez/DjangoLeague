@@ -1,0 +1,23 @@
+<h1>Clasificación</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Equipo</th>
+            <th>Puntos</th>
+            <th>Goles a favor</th>
+            <th>Goles en contra</th>
+            <th>Diferencia de goles</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for equipo in equipos %}
+        <tr>
+            <td>{{ equipo.nombre }}</td>
+            <td>{{ equipo.puntos }}</td>
+            <td>{{ equipo.goles_a_favor }}</td>
+            <td>{{ equipo.goles_en_contra }}</td>
+            <td>{{ equipo.diferencia_goles }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
