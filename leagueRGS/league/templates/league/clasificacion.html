@@ -1,23 +1,62 @@
+<style>
+  h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #4caf50; 
+    text-align: center;
+    text-transform: uppercase; 
+    margin: 1em;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  th,
+  td {
+    text-align: left;
+    padding: 8px;
+  }
+
+  td:not(:first-child) {
+    text-align: center;
+  }
+
+  th {
+    background-color: #4caf50;
+    color: white;
+    text-align: center;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  tr:hover {
+    background-color: #ddd;
+  }
+</style>
 <h1>Clasificación</h1>
 <table>
-    <thead>
-        <tr>
-            <th>Equipo</th>
-            <th>Puntos</th>
-            <th>Goles a favor</th>
-            <th>Goles en contra</th>
-            <th>Diferencia de goles</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for equipo in equipos %}
-        <tr>
-            <td>{{ equipo.nombre }}</td>
-            <td>{{ equipo.puntos }}</td>
-            <td>{{ equipo.goles_a_favor }}</td>
-            <td>{{ equipo.goles_en_contra }}</td>
-            <td>{{ equipo.diferencia_goles }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
+  <thead>
+    <tr>
+      <th>Equipo</th>
+      <th>Puntos</th>
+      <th>Goles a favor</th>
+      <th>Goles en contra</th>
+      <th>Diferencia de goles</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for equipo in equipos %}
+    <tr>
+      <td>{{ equipo.nombre }}</td>
+      <td>{{ equipo.puntos }}</td>
+      <td>{{ equipo.goles_a_favor }}</td>
+      <td>{{ equipo.goles_en_contra }}</td>
+      <td>{{ equipo.diferencia_goles }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
 </table>
