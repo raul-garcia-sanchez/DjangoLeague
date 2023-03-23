@@ -19,8 +19,12 @@ class PartidoAdmin(admin.ModelAdmin):
 class EventoAdmin(admin.ModelAdmin):
     list_display = ('tipo','jugador','partido','tiempo')
 
+class TipoEventoAdmin(admin.ModelAdmin):
+    list_display = ['tipo']
+
 admin.site.register(Liga,LigaAdmin)
 admin.site.register(Equipo, EquipoAdmin)
 admin.site.register(Jugador, JugadorAdmin)
 admin.site.register(Partido, PartidoAdmin)
 admin.site.register(Evento, EventoAdmin)
+admin.site.register(TipoEvento, TipoEventoAdmin)

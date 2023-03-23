@@ -82,13 +82,23 @@ class Partido(models.Model):
             self.local.save()
             self.visitante.save()
 
+
+class TipoEvento(models.Model):
+    tipo = models.CharField(max_length = 50)
+
+    def __str__(self):
+        return self.tipo
     
 class Evento(models.Model):
-    tipo = models.CharField(max_length=50)
+    tipo = models.ForeignKey(TipoEvento, on_delete=models.CASCADE)
     jugador = models.ForeignKey(Jugador, on_delete=models.CASCADE)
     partido = models.ForeignKey(Partido, on_delete=models.CASCADE)
-    tiempo = models.PositiveIntegerField()  
+    equipo = models.ForeignKey(Equipo, on_delete=models.CASCADE, related_name='eventos', null=True, blank=True)
+    tiempo = models.PositiveIntegerField()
+
+    def save(self, *args, **kwargs):
+        self.equipo = self.jugador.equipo
+        super(Evento, self).save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.jugador} ({self.partido}): {self.tipo}"
-
