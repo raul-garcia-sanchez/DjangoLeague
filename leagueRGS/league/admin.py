@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.db.models import Q
 
 # Register your models here.
 
@@ -13,8 +14,25 @@ class EquipoAdmin(admin.ModelAdmin):
 class JugadorAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'dorsal', 'equipo')
 
+class EventInline(admin.TabularInline):
+    model = Evento
+    fields = ('tipo','jugador','partido','equipo','tiempo')
+    ordering = ('tiempo',)  
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "jugador":
+            match_id = request.resolver_match.kwargs['object_id']
+            match = Partido.objects.get(pk=match_id)
+            kwargs["queryset"] = Jugador.objects.filter(equipo__in=[match.local, match.visitante])
+        elif db_field.name == "equipo":
+            match_id = request.resolver_match.kwargs['object_id']
+            match = Partido.objects.get(pk=match_id)
+            kwargs["queryset"] = Equipo.objects.filter(Q(nombre=match.local) | Q(nombre=match.visitante ))
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+    
 class PartidoAdmin(admin.ModelAdmin):
     list_display = ('local','visitante','fecha','hora','goles_local','goles_visitante','ganador')
+    inlines = (EventInline,)
 
 class EventoAdmin(admin.ModelAdmin):
     list_display = ('tipo','jugador','partido','tiempo')
