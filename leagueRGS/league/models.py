@@ -14,10 +14,6 @@ class Liga(models.Model):
 class Equipo(models.Model):
     nombre = models.CharField(max_length=50)
     liga = models.ForeignKey(Liga, on_delete=models.CASCADE)
-    puntos = models.IntegerField(default=0)
-    goles_a_favor = models.IntegerField(default=0)
-    goles_en_contra = models.IntegerField(default=0)
-    diferencia_goles = models.IntegerField(default=0)
 
     def __str__(self):
         return self.nombre
@@ -46,7 +42,6 @@ class Partido(models.Model):
     hora = models.TimeField()
     goles_local = models.IntegerField(default=0)
     goles_visitante = models.IntegerField(default=0)
-    ganador = models.ForeignKey(Equipo, on_delete=models.CASCADE, related_name='ganador', null=True, blank=True)
 
     class Meta:
         constraints = [
@@ -55,33 +50,12 @@ class Partido(models.Model):
 
     def __str__(self):
         return f'{self.local} vs {self.visitante}'
+    
+    def get_goles_local(self):
+        return self.goles_local
 
-    def determinar_ganador(self):
-        if self.goles_local > self.goles_visitante:
-            self.ganador = self.local
-        elif self.goles_local < self.goles_visitante:
-            self.ganador = self.visitante
-        else:
-            self.ganador = None
-        self.actualizar_clasificacion()
-
-    def actualizar_clasificacion(self):
-        if self.ganador:
-            self.ganador.puntos += 3
-            self.ganador.goles_a_favor += self.goles_local if self.ganador == self.local else self.goles_visitante
-            self.ganador.goles_en_contra += self.goles_visitante if self.ganador == self.local else self.goles_local
-            self.ganador.save()
-
-            perdedor = self.visitante if self.ganador == self.local else self.local
-            perdedor.goles_a_favor += self.goles_visitante if self.ganador == self.local else self.goles_local
-            perdedor.goles_en_contra += self.goles_local if self.ganador == self.local else self.goles_visitante
-            perdedor.save()
-        else:
-            self.local.puntos += 1
-            self.visitante.puntos += 1
-            self.local.save()
-            self.visitante.save()
-
+    def get_goles_visitante(self):
+        return self.goles_visitante
 
 class TipoEvento(models.Model):
     tipo = models.CharField(max_length = 50)
@@ -96,13 +70,14 @@ class Evento(models.Model):
     equipo = models.ForeignKey(Equipo, on_delete=models.CASCADE, related_name='eventos', null=True, blank=True)
     tiempo = models.PositiveIntegerField()
 
-    #def save(self, *args, **kwargs):
-        #self.equipo = self.jugador.equipo
-        #super(Evento, self).save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     self.equipo = self.jugador.equipo
+    #     #super(Evento, self).save(*args, **kwargs)
 
     def save(self, *args, **kwargs):
         super(Evento, self).save(*args, **kwargs)
-        if self.tipo == 'Gol':
+        if str(self.tipo) == 'Gol':
+            print("entro")
             if self.equipo == self.partido.local:
                 self.partido.goles_local += 1
                 self.partido.save()

@@ -49,13 +49,13 @@
     </tr>
   </thead>
   <tbody>
-    {% for equipo in equipos %}
+    {% for equipo in classi %}
     <tr>
-      <td>{{ equipo.nombre }}</td>
-      <td>{{ equipo.puntos }}</td>
-      <td>{{ equipo.goles_a_favor }}</td>
-      <td>{{ equipo.goles_en_contra }}</td>
-      <td>{{ equipo.diferencia_goles }}</td>
+      <td>{{ equipo.equip}}</td>
+      <td>{{ equipo.punts}}</td>
+      <td>{{ equipo.gols_a_favor}}</td>
+      <td>{{ equipo.gols_en_contra}}</td>
+      <td>{{ equipo.diferencia_gols}}</td>
     </tr>
     {% endfor %}
   </tbody>

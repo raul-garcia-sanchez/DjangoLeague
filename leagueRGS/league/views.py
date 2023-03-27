@@ -3,9 +3,45 @@ from django.shortcuts import render, get_object_or_404
 from .models import *
 
 def clasificacion(request):
-    equipos = Equipo.objects.all().order_by('-puntos')
-    context = {'equipos': equipos}
-    return render(request, 'league/clasificacion.html', context)
+    lliga = Liga.objects.first()
+    equips = lliga.equipo_set.all()
+    classi = []
+
+    for equip in equips:
+        punts = 0
+        gols_a_favor = 0
+        gols_en_contra = 0
+
+        partits_local = equip.local.all()
+        partits_visitant = equip.visitante.all()
+
+        for partit in partits_local:
+            if partit.goles_local > partit.goles_visitante:
+                punts += 3
+            elif partit.goles_local == partit.goles_visitante:
+                punts += 1
+            gols_a_favor += partit.goles_local
+            gols_en_contra += partit.goles_visitante
+
+        for partit in partits_visitant:
+            if partit.goles_visitante > partit.goles_local:
+                punts += 3
+            elif partit.goles_visitante == partit.goles_local:
+                punts += 1
+            gols_a_favor += partit.goles_visitante
+            gols_en_contra += partit.goles_local
+
+        classi.append({
+            'equip': equip.nombre,
+            'punts': punts,
+            'gols_a_favor': gols_a_favor,
+            'gols_en_contra': gols_en_contra,
+            'diferencia_gols': gols_a_favor - gols_en_contra
+        })
+
+    classi = sorted(classi, key=lambda e: (-e['punts'], -e['diferencia_gols']))
+
+    return render(request, 'league/clasificacion.html', {'classi': classi})
 
 def pichichis(request):
     jugadores = Jugador.objects.all().order_by('-goles')[:10]
