@@ -1,9 +1,12 @@
 from django.shortcuts import render, get_object_or_404
+from django import forms
+from django.shortcuts import redirect
 
 from .models import *
+from league.models import *
 
-def clasificacion(request):
-    lliga = Liga.objects.first()
+def clasificacion(request, liga_id=None):
+    lliga = Liga.objects.get(pk=liga_id)
     equips = lliga.equipo_set.all()
     classi = []
 
@@ -75,3 +78,16 @@ def seguimiento_partido(request, partido_id):
 
     return render(request, 'league/seguimiento_partido.html', {'partido': partido, 'eventos': eventos, 'jugadores_local': jugadores_local, 'jugadores_visitante': jugadores_visitante})
 
+class MenuForm(forms.Form):
+    lliga = forms.ModelChoiceField(queryset=Liga.objects.all())
+
+def menu(request):
+    form = MenuForm()
+    if request.method == "POST":
+        form = MenuForm(request.POST)
+        if form.is_valid():
+            liga = form.cleaned_data.get("lliga")
+            return redirect('/liga/clasificacion/'+str(liga.id))
+    return render(request, "league/menu.html",{
+                    "form": form,
+            })
