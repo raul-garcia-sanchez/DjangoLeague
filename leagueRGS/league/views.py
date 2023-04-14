@@ -81,6 +81,7 @@ def seguimiento_partido(request, partido_id):
 class MenuForm(forms.Form):
     lliga = forms.ModelChoiceField(queryset=Liga.objects.all())
 
+
 def menu(request):
     form = MenuForm()
     if request.method == "POST":
@@ -91,3 +92,25 @@ def menu(request):
     return render(request, "league/menu.html",{
                     "form": form,
             })
+
+class LigaForm(forms.ModelForm):
+    class Meta:
+        model = Liga
+        fields = ['nombre']
+
+   
+        
+def crear_liga(request):
+    form = LigaForm()
+    message = ""
+    if request.method == 'POST':
+        form = LigaForm(request.POST)
+        if form.is_valid():
+            nombre_liga = form.cleaned_data.get("nombre")
+            if(Liga.objects.filter(nombre=nombre_liga)):
+                message = "El nombre de la liga ya existe. Prueba a crear otra"
+            else:
+                message = "Liga creada correctamente"
+                form.save()
+            
+    return render(request, 'league/crear_liga.html', {'form': form, 'message': message})
