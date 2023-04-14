@@ -4,7 +4,9 @@ from . import views
 
 app_name = 'league'
 urlpatterns = [
-    path('clasificacion/', views.clasificacion, name='clasificacion'),
+    path('clasificacion/<int:liga_id>/', views.clasificacion, name='clasificacion'),
     path('pichichis/', views.pichichis, name='pichichis'),
     path('partidos/<int:partido_id>/', views.seguimiento_partido, name='seguimiento_partido'),
+    path('menu/', views.menu, name='menu'),
+    path('crear_liga', views.crear_liga, name='crear_liga')
 ]

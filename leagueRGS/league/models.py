@@ -3,37 +3,31 @@ from django.db import models
 
 from django.db import models
 
-
-class Liga(models.Model):
-    nombre = models.CharField(max_length=50)
-
-    def __str__(self):
-        return self.nombre
-
-
-class Equipo(models.Model):
-    nombre = models.CharField(max_length=50)
-    liga = models.ForeignKey(Liga, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.nombre
-
-
 class Jugador(models.Model):
     nombre = models.CharField(max_length=50)
     dorsal = models.PositiveIntegerField()
-    equipo = models.ForeignKey(Equipo, on_delete=models.CASCADE)
     goles = models.IntegerField(default=0)
-
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['nombre', 'dorsal', 'equipo'], name='pk_jugador')
+            models.UniqueConstraint(fields=['nombre', 'dorsal'], name='pk_jugador')
         ]
 
     def __str__(self):
         return f"{self.nombre} ({self.dorsal})"
+class Equipo(models.Model):
+    nombre = models.CharField(max_length=50)
+    jugadores = models.ManyToManyField(Jugador)
+    
+    def __str__(self):
+        return self.nombre
 
+    
+class Liga(models.Model):
+    nombre = models.CharField(max_length=50)
+    equipos = models.ManyToManyField(Equipo)
 
+    def __str__(self):
+        return self.nombre
 
 class Partido(models.Model):
     local = models.ForeignKey(Equipo, on_delete=models.CASCADE, related_name='local')
@@ -70,14 +64,9 @@ class Evento(models.Model):
     equipo = models.ForeignKey(Equipo, on_delete=models.CASCADE, related_name='eventos', null=True, blank=True)
     tiempo = models.PositiveIntegerField()
 
-    # def save(self, *args, **kwargs):
-    #     self.equipo = self.jugador.equipo
-    #     #super(Evento, self).save(*args, **kwargs)
-
     def save(self, *args, **kwargs):
         super(Evento, self).save(*args, **kwargs)
         if str(self.tipo) == 'Gol':
-            print("entro")
             if self.equipo == self.partido.local:
                 self.partido.goles_local += 1
                 self.partido.save()
