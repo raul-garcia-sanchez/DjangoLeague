@@ -1,0 +1,49 @@
+<form method="post">
+    {% csrf_token %}
+    <label for="lligaSelect">Selecciona lliga:</label>
+    <br>
+    <select name="lligaSelect" id="lligaSelect"></select>
+
+</form>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $.getJSON("/laLliga/api/get_lligues", function (data, status) {
+            data.lligues.forEach(lliga => {
+                $("#lligaSelect").append("<option value='" + lliga.id + "''>" + lliga.nom_lliga + "</option>")
+            })
+        });
+        $("#lligaSelect").on('change', function () {
+            let id = $("#lligaSelect").val();
+            $.getJSON("/laLliga/api/get_equips/" + id, function (data, status) {
+                $("#equipSelectLocal").remove()
+                $("#equipSelectVisitante").remove()
+                if (data.equips.length > 0) {
+                    $("form").append("<br>")
+                    $("form").append("<label for='equipSelectLocal'> Selecciona equip local: </label>")
+                    $("form").append("<br>")
+                    
+                    
+                    $("form").append("<select id='equipSelectLocal' name='equipSelectLocal'></select>")
+                    data.equips.forEach(equip => {
+                        $("#equipSelectLocal").append("<option>" + equip.nom_equip + "</option>")
+                    })
+
+                    $("form").append("<br>")
+                    $("form").append("<label for='equipSelectVisitante'> Selecciona equip visitant: </label>")
+                    $("form").append("<br>")
+                    $("form").append("<select id='equipSelectVisitante' name='equipSelectVisitante'></select>")
+                    data.equips.forEach(equip => {
+                        $("#equipSelectVisitante").append("<option>" + equip.nom_equip + "</option>")
+                    })
+                    $("form").append("<br>")
+                    $("form").append("<br>")
+                    $("form").append("<input type='submit'>")
+
+                }
+
+            });
+        })
+    });
+</script>
