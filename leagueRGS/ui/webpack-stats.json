@@ -1,0 +1,42 @@
+{
+  "status": "done",
+  "assets": {
+    "css/main.2cf79ad6.css": {
+      "name": "css/main.2cf79ad6.css",
+      "path": "/home/rgarcia/dev23/DjangoLeague/leagueRGS/ui/dist/css/main.2cf79ad6.css",
+      "publicPath": "http://0.0.0.0:8080/css/main.2cf79ad6.css"
+    },
+    "favicon.ico": {
+      "name": "favicon.ico",
+      "path": "/home/rgarcia/dev23/DjangoLeague/leagueRGS/ui/dist/favicon.ico",
+      "publicPath": "http://0.0.0.0:8080/favicon.ico"
+    },
+    "index.html": {
+      "name": "index.html",
+      "path": "/home/rgarcia/dev23/DjangoLeague/leagueRGS/ui/dist/index.html",
+      "publicPath": "http://0.0.0.0:8080/index.html"
+    },
+    "js/main.d5ea0979.js": {
+      "name": "js/main.d5ea0979.js",
+      "path": "/home/rgarcia/dev23/DjangoLeague/leagueRGS/ui/dist/js/main.d5ea0979.js",
+      "publicPath": "http://0.0.0.0:8080/js/main.d5ea0979.js"
+    },
+    "js/main.d5ea0979.js.map": {
+      "name": "js/main.d5ea0979.js.map",
+      "path": "/home/rgarcia/dev23/DjangoLeague/leagueRGS/ui/dist/js/main.d5ea0979.js.map",
+      "publicPath": "http://0.0.0.0:8080/js/main.d5ea0979.js.map"
+    },
+    "main.html": {
+      "name": "main.html",
+      "path": "/home/rgarcia/dev23/DjangoLeague/leagueRGS/ui/dist/main.html",
+      "publicPath": "http://0.0.0.0:8080/main.html"
+    }
+  },
+  "chunks": {
+    "main": [
+      "css/main.2cf79ad6.css",
+      "js/main.d5ea0979.js"
+    ]
+  },
+  "publicPath": "http://0.0.0.0:8080/"
+}

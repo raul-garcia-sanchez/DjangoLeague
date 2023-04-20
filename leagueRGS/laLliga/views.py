@@ -7,10 +7,24 @@ from django.shortcuts import redirect
      
 
 # Create your views here.
-def index():
-    return HttpResponse("Hello, world. You're at the lliga index.")
+from django.shortcuts import render
 
+from django.contrib.auth.decorators import login_required
+     
+@login_required
+def profile(request):
+    return render(request,"registration/profile.html")
 
+@login_required
+def change_password(request):
+    return render(request, "registration/change_password.html")
+
+@login_required
+def index(request):
+    context = {}
+    return render(request, 'index.html', context)
+
+@login_required
 def classificacio(request,lliga_id=None):
     lliga = Lliga.objects.first()
     if lliga_id:
@@ -33,10 +47,11 @@ def classificacio(request,lliga_id=None):
     classi.sort(reverse=True)
     return render(request,"classificacio.html",{"classificacio":classi})
 
-
+@login_required
 class TriarLligaForm(forms.Form):
     lliga = forms.ModelChoiceField(queryset=Lliga.objects.all())
     
+@login_required
 def menu(request):
     form = TriarLligaForm()
     if request.method == "POST":
@@ -46,6 +61,7 @@ def menu(request):
             return redirect('classificacio',lliga.id)
     return render(request, "menu.html",{"form": form})
 
+@login_required
 def crearPartit(request):
     form = TriarLligaForm()
     if request.method == "POST":
@@ -55,12 +71,13 @@ def crearPartit(request):
             return redirect('triarEquipsPartit',lliga.id)
     return render(request, "crearPartit.html",{"form": form})
 
-
+@login_required
 class TriarEquipsPartitForm(forms.ModelForm):
     class Meta: 
         model = Partit
         fields = ["equip_local","equip_visitant"]
 
+@login_required
 def triarEquipsPartit(request,lliga_id):
     lliga = Lliga.objects.get(pk=lliga_id)
     form = TriarEquipsPartitForm()
@@ -83,11 +100,13 @@ def triarEquipsPartit(request,lliga_id):
                 message = "Els equips son iguals, no es pot crear el partit"
     return render(request,"crearPartit.html",{"form": form, "message": message})
 
+@login_required
 class LligaForm(forms.ModelForm):
     class Meta:
         model = Lliga
         fields = ["nom_lliga","equips"]
 
+@login_required
 def crearLliga(request):
     form = LligaForm()
     messageError  = ""
@@ -104,5 +123,6 @@ def crearLliga(request):
     return render(request,"crearLliga.html",{"form": form, "message": messageError})
 
 #! VISTAS CON DATOS DE API
+@login_required
 def edita_partit_advanced(request):
     return render(request, "edita_partit_advanced.html")
